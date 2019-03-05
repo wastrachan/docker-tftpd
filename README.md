@@ -13,7 +13,7 @@ Tftpd in a Docker container, with data directory in a volume, and a configurable
 Pull the latest image from Docker Hub:
 
 ```shell
-docker pull wastrachan/docker-tftpd
+docker pull wastrachan/tftpd
 ```
 
 #### Manually
