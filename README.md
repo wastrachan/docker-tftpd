@@ -35,7 +35,7 @@ Run this image with the `make run` shortcut, or manually with `docker run`.
 
 
 ```shell
-docker run -v "$(pwd)/config:/config" \
+docker run -v "$(pwd)/data:/data" \
            --name tftpd \
            -p 69:69/udp \
            -e PUID=1111 \
