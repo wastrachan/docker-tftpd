@@ -26,7 +26,7 @@ jobs:
       - run:
           name: Update MicroBadger
           command: |
-            curl -X POST 'https://hooks.microbadger.com/images/wastrachan/tftpd/AiyPLeYRd66JjWE419gCo2Jnmuk='
+            curl -X POST '$MICROBADGER_URL'
 
 workflows:
   version: 2
