@@ -26,20 +26,18 @@ jobs:
 
 workflows:
   version: 2
-  on_push:
-    filters:
-      branches:
-        only:
-          - master
+  commit:
     jobs:
-      - build
+      - build:
+          filters:
+            branches:
+              only: master
   nightly:
     triggers:
       - schedule:
-        cron: "0 0 * * *"
-    filters:
-      branches:
-        only:
-          - master
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only: master
     jobs:
       - build
