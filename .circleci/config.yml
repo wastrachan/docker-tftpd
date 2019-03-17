@@ -19,6 +19,10 @@ jobs:
               echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
               docker push $IMAGE_NAME:latest
             fi
+      - run:
+          name: Update MicroBadger
+          command: |
+            curl -X POST 'https://hooks.microbadger.com/images/wastrachan/tftpd/AiyPLeYRd66JjWE419gCo2Jnmuk='
 
 workflows:
    version: 2
