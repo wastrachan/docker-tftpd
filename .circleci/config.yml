@@ -26,6 +26,13 @@ jobs:
 
 workflows:
    version: 2
+   on_push:
+     filters:
+       branches:
+         only:
+           - master
+      jobs:
+        - build
    nightly:
      triggers:
        - schedule:
