@@ -26,7 +26,7 @@ jobs:
       - run:
           name: Update MicroBadger
           command: |
-            curl -X POST '$MICROBADGER_URL'
+            curl -X POST "${MICROBADGER_URL}"
 
 workflows:
   version: 2
