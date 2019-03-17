@@ -25,21 +25,21 @@ jobs:
             curl -X POST 'https://hooks.microbadger.com/images/wastrachan/tftpd/AiyPLeYRd66JjWE419gCo2Jnmuk='
 
 workflows:
-   version: 2
-   on_push:
-     filters:
-       branches:
-         only:
-           - master
-      jobs:
-        - build
-   nightly:
-     triggers:
-       - schedule:
-           cron: "0 0 * * *"
-           filters:
-             branches:
-               only:
-                 - master
-     jobs:
-       - build
+  version: 2
+  on_push:
+    filters:
+      branches:
+        only:
+          - master
+    jobs:
+      - build
+  nightly:
+    triggers:
+      - schedule:
+        cron: "0 0 * * *"
+    filters:
+      branches:
+        only:
+          - master
+    jobs:
+      - build
