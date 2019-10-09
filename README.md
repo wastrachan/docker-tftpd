@@ -4,7 +4,6 @@ Tftpd Docker Image
 Tftpd in a Docker container, with data directory in a volume, and a configurable UID/GID for data files.
 
 [![CircleCI](https://circleci.com/gh/wastrachan/docker-tftpd/tree/master.svg?style=svg)](https://circleci.com/gh/wastrachan/docker-tftpd/tree/master)
-[![](https://images.microbadger.com/badges/image/wastrachan/tftpd.svg)](https://microbadger.com/images/wastrachan/tftpd)
 [![](https://img.shields.io/docker/pulls/wastrachan/tftpd.svg)](https://hub.docker.com/r/wastrachan/tftpd)
 
 ## Install
