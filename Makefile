@@ -1,7 +1,10 @@
 # Docker tftpd Image
 #
-# Winston Astrachan 2019
-#
+# Winston Astrachan 2024
+
+SHELL=/bin/bash
+
+.PHONY: help
 help:
 	@echo ""
 	@echo "Usage: make COMMAND"
@@ -16,6 +19,7 @@ help:
 	@echo "  delete       Delete image and mark for rebuild"
 	@echo ""
 
+.PHONY: build
 build: .tftpd.img
 
 .tftpd.img:
@@ -27,8 +31,8 @@ run: build
 	docker run -v "$(CURDIR)/data:/data" \
 	           --name tftpd \
 	           -p 69:69/udp \
-	           -e PUID=1111 \
-	           -e PGID=1112 \
+			   -e PUID=$$(id -u) \
+			   -e PGID=$$(id -g) \
 	           --restart unless-stopped \
 	           -d \
 	           wastrachan/tftpd:latest
