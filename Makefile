@@ -1,7 +1,3 @@
-# Docker tftpd Image
-#
-# Winston Astrachan 2024
-
 SHELL=/bin/bash
 
 .PHONY: help
@@ -14,6 +10,7 @@ help:
 	@echo "Commands:"
 	@echo "  build        Build and tag image"
 	@echo "  run          Start container in the background with locally mounted volume"
+	@echo "  tail         Tail logs from container running in the background"
 	@echo "  stop         Stop and remove container running in the background"
 	@echo "  clean        Mark image for rebuild"
 	@echo "  delete       Delete image and mark for rebuild"
@@ -36,6 +33,10 @@ run: build
 	           --restart unless-stopped \
 	           -d \
 	           wastrachan/tftpd:latest
+
+.PHONY: tail
+tail:
+	docker logs -f tftpd
 
 .PHONY: stop
 stop:

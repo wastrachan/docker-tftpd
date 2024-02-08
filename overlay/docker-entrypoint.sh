@@ -4,14 +4,13 @@ set -e
 PUID="${PUID:-100}"
 PGID="${PGID:-101}"
 
-echo ""
-echo "----------------------------------------"
-echo " Starting tftpd, using the following:   "
-echo "                                        "
-echo "     UID: $PUID                         "
-echo "     GID: $PGID                         "
-echo "----------------------------------------"
-echo ""
+cat << EOF
+
+Starting tftpd as the following:
+  UID: ${PUID}
+  GID: ${PGID}
+
+EOF
 
 # Set UID/GID of tftpd user
 sed -i "s/^tftpd\:x\:100\:101/tftpd\:x\:$PUID\:$PGID/" /etc/passwd

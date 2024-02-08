@@ -1,6 +1,6 @@
 # Tftpd Docker Image
 
-Tftpd in a Docker container, with data directory in a volume, and a configurable UID/GID for data files.
+Tftpd in a Docker container, with a data directory in a volume, and a configurable UID/GID for data files.
 
 [![CircleCI](https://circleci.com/gh/wastrachan/docker-tftpd/tree/master.svg?style=svg)](https://circleci.com/gh/wastrachan/docker-tftpd/tree/master)
 [![](https://img.shields.io/docker/pulls/wastrachan/tftpd.svg)](https://hub.docker.com/r/wastrachan/tftpd)
@@ -37,8 +37,8 @@ Run this image with the `make run` shortcut, or manually with `docker run`.
 docker run -v "$(pwd)/data:/data" \
            --name tftpd \
            -p 69:69/udp \
-			     -e PUID=${id -u} \
-			     -e PGID=${id -g} \
+			     -e PUID=$(id -u) \
+			     -e PGID=$(id -g) \
            --restart unless-stopped \
            wastrachan/tftpd:latest
 ```

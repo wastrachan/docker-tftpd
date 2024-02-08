@@ -1,11 +1,17 @@
 FROM alpine:latest
-LABEL maintainer="Winston Astrachan"
-LABEL description="tftpd on Alpine Linux"
+
+LABEL org.opencontainers.image.title="tftpd"
+LABEL org.opencontainers.image.description="tftpd on alpine linux"
+LABEL org.opencontainers.image.licenses="MIT"
+LABEL org.opencontainers.image.authors="Winston Astrachan"
 
 RUN apk --no-cache add tftp-hpa
-RUN mkdir /data && \
-    addgroup -S tftpd && \
-    adduser -s /bin/false -S -D -H -h /data -G tftpd tftpd
+RUN <<EOF
+    set -eux
+    mkdir /data
+    addgroup -S -g 101 tftpd
+    adduser -s /bin/false -S -D -H -h /data -G tftpd -u 100 tftpd
+EOF
 
 COPY overlay/ /
 VOLUME /data
