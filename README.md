@@ -34,13 +34,14 @@ If you need to rebuild the image, run `make clean build`.
 Run this image with the `make run` shortcut, or manually with `docker run`.
 
 ```shell
-docker run -v "$(pwd)/data:/data" \
-           --name tftpd \
-           -p 69:69/udp \
-			     -e PUID=$(id -u) \
-			     -e PGID=$(id -g) \
-           --restart unless-stopped \
-           wastrachan/tftpd:latest
+docker run \
+  -v "$(pwd)/data:/data" \
+  --name tftpd \
+  -p 69:69/udp \
+  -e PUID=$(id -u) \
+  -e PGID=$(id -g) \
+  --restart unless-stopped \
+  wastrachan/tftpd:latest
 ```
 
 #### Docker Compose
