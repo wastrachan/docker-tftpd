@@ -3,7 +3,7 @@ FROM alpine:latest
 LABEL org.opencontainers.image.title="Docker tftpd"
 LABEL org.opencontainers.image.description="tftpd on Alpine Linux"
 LABEL org.opencontainers.image.authors="Winston Astrachan"
-LABEL org.opencontainers.image.source="https://github.com/wastrachan/docker-bind/"
+LABEL org.opencontainers.image.source="https://github.com/wastrachan/docker-tftpd/"
 LABEL org.opencontainers.image.licenses="MIT"
 
 RUN apk --no-cache add tftp-hpa
