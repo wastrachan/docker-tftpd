@@ -1,34 +1,45 @@
-version: 2.1
-
+version: 2
 jobs:
   build:
-    environment:
-      IMAGE_NAME: wastrachan/tftpd
     docker:
       - image: cimg/base:current
     resource_class: large
     steps:
       - checkout
+
       - setup_remote_docker:
           docker_layer_caching: true
+
       - run:
           name: Build image
           command: |
-            docker build -t $IMAGE_NAME .
-            docker tag $IMAGE_NAME $IMAGE_NAME:latest
+            make build
+            docker tag wastrachan/tftpd:latest ghcr.io/wastrachan/tftpd:latest
+
       - run:
           name: Publish image
           command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-              docker push $IMAGE_NAME:latest
-            fi
+            echo "$DOCKERHUB_PASS" | docker login --username $DOCKERHUB_USERNAME --password-stdin
+            echo "$GITHUB_PAT" | docker login ghcr.io -u $GITHUB_USERNAME --password-stdin
+            make push
+            make push REGISTRY=ghcr.io
 
 workflows:
   version: 2
   commit:
     jobs:
       - build:
+          context: Docker
           filters:
             branches:
               only: master
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 0 * * 1,4"
+          filters:
+            branches:
+              only: master
+    jobs:
+      - build:
+          context: Docker
