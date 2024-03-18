@@ -1,4 +1,4 @@
-SHELL=/bin/bash
+# tftpd Docker Image
 
 .PHONY: help
 help:
@@ -9,44 +9,39 @@ help:
 	@echo ""
 	@echo "Commands:"
 	@echo "  build        Build and tag image"
+	@echo "  push         Push tagged image to registry"
 	@echo "  run          Start container in the background with locally mounted volume"
-	@echo "  tail         Tail logs from container running in the background"
 	@echo "  stop         Stop and remove container running in the background"
-	@echo "  clean        Mark image for rebuild"
-	@echo "  delete       Delete image and mark for rebuild"
+	@echo "  delete       Delete all built image versions"
 	@echo ""
 
-.PHONY: build
-build: .tftpd.img
+IMAGE=wastrachan/tftpd
+TAG=latest
+REGISTRY=docker.io
 
-.tftpd.img:
-	docker build -t wastrachan/tftpd:latest .
-	@touch $@
+.PHONY: build
+build:
+	@docker build -t ${REGISTRY}/${IMAGE}:${TAG} .
+
+.PHONY: push
+push:
+	@docker push ${REGISTRY}/${IMAGE}:${TAG}
 
 .PHONY: run
 run: build
-	docker run -v "$(CURDIR)/data:/data" \
+	docker run -v "$(CURDIR)/config:/config" \
 	           --name tftpd \
+			   --rm \
 	           -p 69:69/udp \
-			   -e PUID=$$(id -u) \
-			   -e PGID=$$(id -g) \
-	           --restart unless-stopped \
+	           -e PUID=$$(id -u) \
+	           -e PGID=$$(id -g) \
 	           -d \
-	           wastrachan/tftpd:latest
-
-.PHONY: tail
-tail:
-	docker logs -f tftpd
+	           ${REGISTRY}/${IMAGE}:${TAG}
 
 .PHONY: stop
 stop:
-	docker stop tftpd
-	docker rm tftpd
-
-.PHONY: clean
-clean:
-	rm -f .tftpd.img
+	@docker stop tftpd
 
 .PHONY: delete
-delete: clean
-	docker rmi -f wastrachan/tftpd
+delete:
+	@docker image ls | grep ${IMAGE} | awk '{print $$3}' | xargs -I + docker rmi +
