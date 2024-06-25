@@ -1,0 +1,18 @@
+---
+version: '3.9'
+services:
+    tftpd:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: tftpd
+        restart: always
+        ports:
+            - "69:69/udp"
+        volumes:
+            - ./tftpboot:/tftpboot
+            - ./logs/tftpd.log:/var/log/tftpd.log
+        environment:
+            - TZ=America/Bogota
+            - PUID=${PUID?Variable not set}
+            - PGID=${PGID?Variable not set}

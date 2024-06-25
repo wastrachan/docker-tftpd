@@ -1,72 +1,69 @@
-# Tftpd Docker Image
+# TFTPD
 
-tftpd in a Docker container, with a data directory in a volume, and a configurable UID/GID for the tftpd process.
 
-[![CircleCI](https://circleci.com/gh/wastrachan/docker-tftpd/tree/master.svg?style=svg)](https://circleci.com/gh/wastrachan/docker-tftpd/tree/master)
-[![](https://img.shields.io/docker/pulls/wastrachan/tftpd.svg)](https://hub.docker.com/r/wastrachan/tftpd)
+## Description
 
-## Install
+This project contains the configuration to create a docker image of the tftpd service.
 
-#### Docker Hub
 
-Pull the latest image from Docker Hub:
+## Pre-Requirements
 
-```shell
-docker pull wastrachan/tftpd
+### Packages
+```
+docker
+docker compose
 ```
 
-#### Github Container Registry
-
-Or, pull from the GitHub Container Registry:
-
-```shell
-docker pull ghcr.io/wastrachan/tftpd
+### Directories and files
+```bash
+/tftpboot
+/var/log/tftpd.log
 ```
 
-#### Build From Source
 
-Clone this repository, and run `make build` to build an image:
+## Installation
 
-```shell
-git clone https://github.com/wastrachan/docker-tftpd.git
-cd docker-tftpd
-make build
+Generate the configuration file from `docker-compose.yml` located in this project and modify the following parameters:
+* `image`: Locates the tag where the most up-to-date image is located.
+* `volumes`: Volumes contain the path of the files necessary for correct operation ("`/tftpboot` and `/var/log/tftpd.log`")
+
+To download the project image, run in the path where the `docker-compose.yml` file is located:
+```bash
+PGID=$(id -g) PUID=$(id -u) docker-compose up -d
 ```
 
-## Run
+`Note`: If you'd like to override the UID and GID of the tftpd process, you can do so with the environment variables `PUID` and `PGID`. This is helpful if other containers must access your configuration volume.
 
-#### Docker
 
-Run this image with the `make run` shortcut, or manually with `docker run`.
+## Running the tests
 
-```shell
-docker run -v "$(pwd)/data:/data" \
-           --name tftpd \
-           --rm \
-           -p 69:69/udp \
-           -e PUID=$(id -u) \
-           -e PGID=$(id -g) \
-           wastrachan/tftpd:latest
+Perform a GET or PUT method query through the tftp client and verify that the file was copied correctly.
+
+### GET method
+```bash
+tftp -v 172.20.0.2 69 -c get Spanish.txt Spanish-local.txt
 ```
 
-## Configuration
 
-#### User / Group Identifiers
+### PUT method
 
-If you'd like to override the UID and GID of the `tftpd` process, you can do so with the environment variables `PUID` and `PGID`. This is helpful if other containers must access your configuration volume.
+```bash
+tftp -v 172.20.0.2 69 -c put Spanish-local.txt Spanish.txt
+```
 
-#### Services
+`Note`: Remember that to perform the `PUT` method the file must exist on the `/tftpboot` shared volume. If you want to create a file, add the following line in your `docker-compose.yml` 
+```yml
+command: ["/usr/sbin/in.tftpd", "-c", "-L", "-v", "-s" , "-u", "tftpd", "/tftpboot"]
+```
+The `-c` flag allows you to create new files in case they do not exist.
 
-| Service | Port |
-| ------- | ---- |
-| TFTPD   | 69   |
 
-#### Volumes
+## Built with
 
-| Volume  | Description                              |
-| ------- | ---------------------------------------- |
-| `/data` | Data directory for files served by tftpd |
+* Docker - v26.1.3
+* Docker Compose - v2.18.1
 
-## License
 
-The content of this project itself is licensed under the [MIT License](LICENSE).
+## Autors
+
+* iKono Telecomunicaciones

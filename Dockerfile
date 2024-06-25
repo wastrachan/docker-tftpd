@@ -1,22 +1,34 @@
-FROM alpine:latest
+FROM alpine:3.20
 
-LABEL org.opencontainers.image.title="Docker tftpd"
-LABEL org.opencontainers.image.description="tftpd on Alpine Linux"
-LABEL org.opencontainers.image.authors="Winston Astrachan"
-LABEL org.opencontainers.image.source="https://github.com/wastrachan/docker-tftpd/"
-LABEL org.opencontainers.image.licenses="MIT"
+# Metadata
+LABEL name="tftpd"
+LABEL authors="iKono Telecomunicaciones"
 
-RUN apk --no-cache add tftp-hpa
+# Install tftp-hpa and tzdata
+RUN apk --no-cache add tftp-hpa tzdata
+
+# Create tftpd user and group
 RUN <<EOF
     set -eux
-    mkdir /data
+    mkdir /tftpboot
     addgroup -S -g 101 tftpd
-    adduser -s /bin/false -S -D -H -h /data -G tftpd -u 100 tftpd
+    adduser -s /bin/false -S -D -H -h /tftpboot -G tftpd -u 100 tftpd
 EOF
 
-COPY overlay/ /
-VOLUME /data
+# Set working directory
+WORKDIR /app
 
+# Copy start.sh script
+COPY start.sh .
+
+# Set volume
+VOLUME /tftpboot
+
+# Expose tftp port
 EXPOSE 69/udp
-ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["/usr/sbin/in.tftpd", "-L", "-v", "-s", "-u", "tftpd", "/data"]
+
+# Start configuration
+ENTRYPOINT ["/app/start.sh"]
+
+# Start tftpd
+CMD /usr/sbin/in.tftpd -L -v -s -u tftpd /tftpboot & tail -f /var/log/messages.log
